@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:15
     container_name: calc-postgres
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -13,11 +13,17 @@ services:
       - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-
+      - ../src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
   keycloak:
     image: quay.io/keycloak/keycloak:21.1.1
     container_name: keycloak
-    restart: always
+    restart: unless-stopped
     command: start-dev
     environment:
       TZ: America/Los_Angeles
@@ -25,28 +31,34 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
       - '8080:8080'
-
+    depends_on:
+      postgres:
+        condition: service_healthy
+  
   redis:
     image: redis:7-alpine
     container_name: calc-redis
-    restart: always
+    restart: unless-stopped
     ports:
       - '6379:6379'
-
+  
   backend:
     build:
       context: ..
       dockerfile: Dockerfile
     container_name: calc-backend
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
-    depends_on:
-      - postgres
-      - keycloak
-      - redis
     ports:
       - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+      redis:
+        condition: service_started
 
 volumes:
   pgdata:

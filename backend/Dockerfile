@@ -1,26 +1,42 @@
-# 1. Base Image
-FROM node:20-alpine
+# --- Stage 1: Build-Umgebung ---
+FROM node:20-alpine as builder
 
-# 2. Arbeitsverzeichnis erstellen
-WORKDIR /usr/src/app
+# 1. Arbeitsverzeichnis festlegen
+WORKDIR /app
 
-# 3. Package.json & Package-lock kopieren
+# 2. Package-Manifeste kopieren, um Caching zu nutzen
 COPY package*.json ./
 
-# 4. Abhängigkeiten installieren
-RUN npm install
+# 3. Abhängigkeiten für den Build-Prozess installieren
+RUN npm ci
 
-# 5. App Code kopieren
+# 4. Quellcode kopieren
 COPY . .
 
-# 6. TypeScript kompilieren
+# 5. Anwendung kompilieren
 RUN npm run build
 
-# 7. TypeORM-Migrationen ausführen (das ist der neue, entscheidende Schritt)
-RUN npm run migration:run
+# --- Stage 2: Produktions-Umgebung ---
+FROM node:20-alpine
 
-# 8. Port freigeben
+# 1. Arbeitsverzeichnis festlegen
+WORKDIR /app
+
+# 2. Package-Manifeste aus der Builder-Phase kopieren
+COPY --from=builder /app/package*.json ./
+
+# 3. Nur die Produktionsabhängigkeiten installieren
+RUN npm install --omit=dev
+
+# 4. Kompilierten Code aus der "builder"-Phase kopieren
+COPY --from=builder /app/dist ./dist
+
+# 5. Non-Root-Benutzer für verbesserte Sicherheit anlegen und verwenden
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# 6. Port freigeben
 EXPOSE 3001
 
-# 9. Start Command
-CMD ["npm", "run", "start:prod"]
+# 7. Startbefehl für die produktionsreife Anwendung
+CMD ["node", "dist/main.js"]

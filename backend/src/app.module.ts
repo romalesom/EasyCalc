@@ -22,7 +22,7 @@ import { AuditLog } from './entities/audit-log.entity';
       entities: [User, MasterData, CalculationInput, CalculationResult, AuditLog],
       synchronize: false,        // ⚠️ Nur für Entwicklung
       autoLoadEntities: true,   // Entities automatisch erkennen
-      schema: 'CompanyName',         // explizites Schema
+      schema: 'companyName',         // explizites Schema
     }),
 
     // Keycloak / Auth
