@@ -1,26 +1,49 @@
-version: '3.9'
 services:
-  keycloak-db:
+  postgres:
     image: postgres:15
+    container_name: calc-postgres
+    restart: always
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak_user
-      POSTGRES_PASSWORD: supersecret
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432"
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
 
   keycloak:
-    image: quay.io/keycloak/keycloak:21.0.1
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: adminpassword
-      DB_VENDOR: POSTGRES
-      DB_ADDR: keycloak-db
-      DB_DATABASE: keycloak
-      DB_USER: keycloak_user
-      DB_PASSWORD: supersecret
-    ports:
-      - "8080:8080"
+    image: quay.io/keycloak/keycloak:21.1.1
+    container_name: keycloak
+    restart: always
     command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    ports:
+      - '8080:8080'
+
+  redis:
+    image: redis:7-alpine
+    container_name: calc-redis
+    restart: always
+    ports:
+      - '6379:6379'
+
+  backend:
+    build: .
+    container_name: calc-backend
+    restart: always
+    env_file:
+      - .env
     depends_on:
-      - keycloak-db
+      - postgres
+      - keycloak
+      - redis
+    ports:
+      - '3001:3001'
+
+volumes:
+  pgdata:
