@@ -1,0 +1,41 @@
+{
+  "name": "easycalc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romalesom/EasyCalc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/romalesom/EasyCalc/issues"
+  },
+  "homepage": "https://github.com/romalesom/EasyCalc#readme",
+  "dependencies": {
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/passport": "^11.0.5",
+    "@nestjs/platform-express": "^11.1.6",
+    "@nestjs/typeorm": "^11.0.0",
+    "install": "^0.13.0",
+    "ioredis": "^5.7.0",
+    "jwks-rsa": "^3.2.0",
+    "keycloak-connect": "^26.1.1",
+    "npm": "^11.6.0",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "typeorm": "^0.3.26"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4.28.10",
+    "@types/node": "^24.3.0",
+    "@types/passport-jwt": "^4.0.1"
+  }
+}
