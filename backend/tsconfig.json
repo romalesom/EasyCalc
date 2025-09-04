@@ -5,6 +5,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strict": true,
-    "useDefineForClassFields": false  // <--- wichtig!
+    "useDefineForClassFields": false,  // <--- wichtig!
+    "outDir": "dist",
   }
 }

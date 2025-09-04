@@ -20,7 +20,9 @@ import { AuditLog } from './entities/audit-log.entity';
     TypeOrmModule.forRoot({
       ...databaseConfig,
       entities: [User, MasterData, CalculationInput, CalculationResult, AuditLog],
-      synchronize: true, // Nur Entwicklung: Tabellen automatisch erstellen
+      synchronize: true,        // ⚠️ Nur für Entwicklung
+      autoLoadEntities: true,   // Entities automatisch erkennen
+      schema: 'public',         // explizites Schema
     }),
 
     // Keycloak / Auth

@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # 4. Abhängigkeiten installieren
-RUN npm install --production
+RUN npm install
 
 # 5. App Code kopieren
 COPY . .

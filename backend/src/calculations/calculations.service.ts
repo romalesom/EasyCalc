@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { CalculationInput } from '../entities/calculation-input.entity';
 import { CalculationResult } from '../entities/calculation-result.entity';
 import { MasterData } from '../entities/master-data.entity';
@@ -49,6 +49,6 @@ export class CalculationsService {
   async getUserCalculations(userId: string): Promise<CalculationResult[]> {
     const inputs = await this.calculationInputRepo.find({ where: { userId } });
     const inputIds = inputs.map(i => i.id);
-    return this.calculationResultRepo.find({ where: { calculationId: inputIds } });
+    return this.calculationResultRepo.find({ where: { calculationId: In(inputIds) } });
   }
 }

@@ -20,6 +20,7 @@ services:
     restart: always
     command: start-dev
     environment:
+      TZ: America/Los_Angeles
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
@@ -33,7 +34,9 @@ services:
       - '6379:6379'
 
   backend:
-    build: .
+    build:
+      context: ..
+      dockerfile: Dockerfile
     container_name: calc-backend
     restart: always
     env_file:
