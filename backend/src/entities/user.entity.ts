@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { CalculationInput } from './calculation-input.entity';
 
 @Entity('users')
 export class User {
@@ -12,5 +13,11 @@ export class User {
   role!: string; // 'admin' | 'user'
 
   @CreateDateColumn({ type: 'timestamptz' })
-  createdAt!: Date; 
+  createdAt!: Date;
+  
+  @UpdateDateColumn({ type: 'timestamptz' })
+  updatedAt!: Date;
+
+  @OneToMany(() => CalculationInput, (calculationInput) => calculationInput.user)
+  calculationInputs!: CalculationInput[];
 }

@@ -16,8 +16,11 @@ COPY . .
 # 6. TypeScript kompilieren
 RUN npm run build
 
-# 7. Port freigeben
+# 7. TypeORM-Migrationen ausführen (das ist der neue, entscheidende Schritt)
+RUN npm run migration:run
+
+# 8. Port freigeben
 EXPOSE 3001
 
-# 8. Start Command
+# 9. Start Command
 CMD ["npm", "run", "start:prod"]

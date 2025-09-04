@@ -12,7 +12,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "migration:run": "ts-node ./scripts/run-migration.ts",
+    "migration:run": "npm run typeorm -- migration:run --dataSource ./src/data-source.ts",
+    "typeorm": "typeorm-ts-node-commonjs",
     "start:prod": "node dist/main.js"
   },
   "dependencies": {

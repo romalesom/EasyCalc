@@ -19,7 +19,7 @@ export class CalculationsService {
   // Neue Berechnung erstellen
   async createCalculation(userId: string, inputValues: any): Promise<CalculationResult> {
     // 1️⃣ Input speichern
-    const input = this.calculationInputRepo.create({ userId, inputValues });
+    const input = this.calculationInputRepo.create({ userId, hoursSpent: inputValues.hoursSpent, materialsConsumed: inputValues.materialsConsumed, outsourcedServicesAndEquipment: inputValues.outsourcedServicesAndEquipment, priceEstimate: inputValues.priceEstimate });
     await this.calculationInputRepo.save(input);
 
     // 2️⃣ Stammdaten abrufen
