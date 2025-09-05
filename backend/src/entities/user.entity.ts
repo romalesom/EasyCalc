@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { CalculationInput } from './calculation-input.entity';
+import { AuditLog } from './audit-log.entity';
+import { IsEmail } from 'class-validator';
 
 @Entity('users')
 export class User {
@@ -7,6 +9,7 @@ export class User {
   id!: string;
 
   @Column({ unique: true })
+  @IsEmail()
   email!: string;
 
   @Column()
@@ -20,4 +23,7 @@ export class User {
 
   @OneToMany(() => CalculationInput, (calculationInput) => calculationInput.user)
   calculationInputs!: CalculationInput[];
+
+  @OneToMany(() => AuditLog, (auditLog) => auditLog.user)
+  auditLogs!: AuditLog[];
 }
